@@ -34,7 +34,7 @@ jobs:
           tag_name: v${{ steps.project.outputs.version }}
           release_name: Release ${{ steps.project.outputs.version }}
           draft: false
-          prerelease: false
+          prerelease: true
       - name: Test
         run: ls ./target
       - name: Upload Release Asset
