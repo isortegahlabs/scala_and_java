@@ -1,7 +1,5 @@
 name: Publish package to GitHub Packages
 on:
-  release:
-    types: [created]
   push:
     branches:
       - develop
@@ -40,7 +38,7 @@ jobs:
           tag_name: v${{ steps.project.outputs.version }}
           release_name: Release ${{ steps.project.outputs.version }}
           draft: false
-          prerelease: true
+          prerelease: false
       - name: Test
         run: ls ./target
       - name: Upload Release Asset
