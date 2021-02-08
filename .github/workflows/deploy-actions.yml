@@ -22,21 +22,25 @@ jobs:
         env:
           MAVEN_USERNAME: isortegahlabs
           MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "v1"
-          prerelease: false
-          title: "Development Build"
-          files: |
-            LICENSE.txt
-            *.jar
-      - name: Upload Jar
-        uses: actions/upload-release-asset@v1.0.2
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/${{ needs.version.outputs.jar-name }}
-          asset_name: ${{ needs.version.outputs.release-jar-name }}
+          tag_name: "v0.1.2"
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Test
+        run: ls ./target
+      - name: Upload Release Asset
+        id: upload-release-assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./target/scala_and_java-0.1.0-SNAPSHOT.jar
+          asset_name: prueba.jar
           asset_content_type: application/java-archive
